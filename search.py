@@ -135,63 +135,39 @@ def depthFirstSearch(problem):
     util.raiseNotDefined()"""
     """fringe = util.Stack()
     return traverse(fringe, problem)"""
-    fringe = util.Stack();
-    def find_path(v):
-        """print("Stack: ", v)"""
-        list = v.list[-1]
-        path = []
-        for item in list:
-            """print("Item added:", item[1])"""
-            if(item[1] != None):
-                path.append(item[1])
-        return path
-    fringe.push((problem.getStartState(), None, 0))
-    visited = set()
-    correctNodes = util.Stack();
+    stack = util.Stack()
+    stack.push((problem.getStartState(), None, 0))
+    visited = []
+    correctNodes = util.Stack()
     correctNodes.push([(problem.getStartState(), None, 0)])
-    while not fringe.isEmpty():
-        v = fringe.pop()
+    while not stack.isEmpty():
+        node = stack.pop()
         """print("Node: ", v)"""
         travelledNode = correctNodes.pop()
         """print("Travelled node: ",travelledNode)"""
-        if problem.isGoalState(v[0]):
+        if problem.isGoalState(node[0]):
             """print("Navigation: ", correctNodes.list[-1])"""
             correctNodes.push(travelledNode)
-            return find_path(correctNodes)
-        if v[0] not in visited:
-            visited.add(v[0])
+            break
+        if node[0] not in visited:
+            visited.append(node[0])
             """print("Visited node: ", v[0])"""
-            suc = problem.getSuccessors(v[0])
+            successors = problem.getSuccessors(node[0])
             """print("Successors: ", suc)"""
-            for child in suc:
+            for s in successors:
                 """print("Child: ", child)"""
-                fringe.push(child)
+                stack.push(s)
                 list = []
-                list.append(child)
+                list.append(s)
                 navigation = travelledNode + list
                 correctNodes.push(navigation)
 
+    directions = []
+    for state in correctNodes.pop():
+        if(state[1] != None):
+            directions.append(state[1])
 
-def dfsUtil(problem, node, visitedList, stack):
-    if (problem.isGoalState(node[0]) == True):
-        return stack;
-    if(not visitedList.__contains__(node[0])):
-        visitedList.append(node[0])
-        stack.push(node)
-        """if(problem.isGoalState(node[0]) == True):
-            return stack;"""
-        successors = problem.getSuccessors(node[0])
-        if len(successors) == 0:
-            if not stack.isEmpty():
-                stack.pop()
-                return stack
-        else:
-            for s in successors:
-                dfsUtil(problem, s, visitedList, stack)
-                if not stack.isEmpty():
-                    stack.pop()
-    return stack
-
+    return directions
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
