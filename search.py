@@ -106,35 +106,6 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    """print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))"""
-
-    """print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))"""
-
-
-    """successors = problem.getSuccessors(problem.getStartState())
-    visitedPositions = []
-    stack = util.Stack()
-    for s in successors:
-        dfsUtil(problem, s, visitedPositions, stack)
-        if(stack.isEmpty() == False):
-            stack.pop()
-
-    nodes = []
-    if(not stack.isEmpty()):
-        nodes = stack.list
-
-    directions = []
-    for action in nodes:
-        directions.append(action[1])
-
-    return directions
-    util.raiseNotDefined()"""
-    """fringe = util.Stack()
-    return traverse(fringe, problem)"""
     stack = util.Stack()
     stack.push((problem.getStartState(), None, 0))
     visited = []
@@ -172,7 +143,38 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    q = util.Queue()
+    q.push((problem.getStartState(), None, 0))
+
+    visited = []
+    visited.append(problem.getStartState())
+
+    links = {}
+    goalState = None
+
+    while not q.isEmpty():
+        node = q.pop()
+        if(not problem.isGoalState(node[0])):
+            successors = problem.getSuccessors(node[0])
+            for s in successors:
+                if not visited.__contains__(s[0]):
+                    q.push(s)
+                    visited.append(s[0])
+                    links[s] = node
+        else:
+            goalState = node
+            break
+
+    directions = [goalState]
+    while directions[-1] != (problem.getStartState(), None, 0):
+        directions.append(links[directions[-1]])
+
+    finalDirections = []
+    for d in directions[::-1]:
+        if d[1] != None:
+            finalDirections.append(d[1])
+    return finalDirections
+
 
 
 def uniformCostSearch(problem):
