@@ -73,23 +73,6 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return [s, s, w, s, w, w, s, w]
 
-def traverse(fringe, problem):
-    def find_path(v):
-        path = []
-        for item in v:
-            path.append(item[1])
-        return path
-    fringe.push([(problem.getStartState(), None, 0)])
-    visited = set()
-    while not fringe.isEmpty():
-        v = fringe.pop()
-        if problem.isGoalState(v[-1][0]):
-            return find_path(v[1:])
-        if v[-1][0] not in visited:
-            visited.add(v[-1][0])
-            suc = problem.getSuccessors(v[-1][0])
-            for child in suc:
-                fringe.push(v + [(child[0], child[1], child[2] + v[-1][2])])
 
 def depthFirstSearch(problem):
     """
@@ -180,6 +163,27 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    directions = []
+    q = util.PriorityQueue()
+    q.push([problem.getStartState(), directions, 0], 0)
+    visited = []
+    while not q.isEmpty():
+        node = q.pop()
+        if problem.isGoalState(node[0]):
+            return node[1]
+
+        if node[0] not in visited:
+            visited.append(node[0])
+            successors = problem.getSuccessors(node[0])
+            for s in successors:
+
+                if s[0] not in visited: # parent[2] = total cost from the beginning to the parent node
+                    path = list(node[1])
+                    path.append(s[1])
+                    child = [s[0], path, problem.getCostOfActions(path)]
+                    q.update(child, problem.getCostOfActions(path))
+
     util.raiseNotDefined()
 
 
@@ -194,7 +198,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    directions = []
+    q = util.PriorityQueue()
+    q.push([problem.getStartState(), directions, 0], 0)
+    visited = []
+    while not q.isEmpty():
+        node = q.pop()
+        if problem.isGoalState(node[0]):
+            return node[1]
+
+        if node[0] not in visited:
+            visited.append(node[0])
+            successors = problem.getSuccessors(node[0])
+            for s in successors:
+                if s[0] not in visited:
+                      # parent[2] = total cost from the beginning to the parent node
+                    path = list(node[1])
+                    path.append(s[1])
+                    child = [s[0], path, problem.getCostOfActions(path)]
+                    cost = problem.getCostOfActions(path) + heuristic(s[0], problem)
+                    q.update(child, cost)
+
 
 
 # Abbreviations
