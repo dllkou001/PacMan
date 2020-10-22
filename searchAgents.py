@@ -290,7 +290,7 @@ class CornersProblem(search.SearchProblem):
         # in initializing the problem
         "*** YOUR CODE HERE ***"
 
-        self.goals = [False, False, False, False]# Keeps track of whether or not the corners have been visited
+        self.goals = [False, False, False, False]
         self.startState = (self.startingPosition, self.goals)
 
 
@@ -309,7 +309,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        if(list(state[1]).__contains__(False)): # Checks whether all corners have been visited
+        if(list(state[1]).__contains__(False)):
             return False
         else:
             return True
@@ -506,7 +506,22 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    food = list(foodGrid.asList())  # using a list of food points coordinates
+    gameState = problem.startingGameState
+    totalDistance = 0
+
+    if len(food) == 0:  # if there is no food return 0
+        return totalDistance
+    else:
+        for f in food:  # finding the maximum distance between the current position and each food point
+            distance = mazeDistance(position, f, gameState)  # using mazeDistance which calculates the real distances of the board
+            if totalDistance > distance:
+                """Do nothing"""
+            else:
+                totalDistance = distance
+
+    return totalDistance
+
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -537,6 +552,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+        return search.bfs(problem)
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -573,6 +589,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
+        status = False
+        if(self.food[x][y] == False):
+            return status
+        else:
+            status = True
+        return status
         util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):

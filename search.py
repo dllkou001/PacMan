@@ -96,20 +96,14 @@ def depthFirstSearch(problem):
     correctNodes.push([(problem.getStartState(), None, 0)])
     while not stack.isEmpty():
         node = stack.pop()
-        """print("Node: ", v)"""
         travelledNode = correctNodes.pop()
-        """print("Travelled node: ",travelledNode)"""
         if problem.isGoalState(node[0]):
-            """print("Navigation: ", correctNodes.list[-1])"""
             correctNodes.push(travelledNode)
             break
         if node[0] not in visited:
             visited.append(node[0])
-            """print("Visited node: ", v[0])"""
             successors = problem.getSuccessors(node[0])
-            """print("Successors: ", suc)"""
             for s in successors:
-                """print("Child: ", child)"""
                 stack.push(s)
                 list = []
                 list.append(s)
@@ -140,7 +134,7 @@ def breadthFirstSearch(problem):
             successors = problem.getSuccessors(node[0])
             for s in successors:
 
-                if s[0] not in visited:  # parent[2] = total cost from the beginning to the parent node
+                if s[0] not in visited:
                     path = list(node[1])
                     path.append(s[1])
                     child = [s[0], path, problem.getCostOfActions(path)]
