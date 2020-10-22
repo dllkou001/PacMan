@@ -126,39 +126,25 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    directions = []
     q = util.Queue()
-    q.push((problem.getStartState(), None, 0))
-
+    q.push([problem.getStartState(), directions, 0])
     visited = []
-    visited.append(problem.getStartState())
-
-    links = {}
-    goalState = None
-
     while not q.isEmpty():
         node = q.pop()
-        if(not problem.isGoalState(node[0])):
+        if problem.isGoalState(node[0]):
+            return node[1]
+
+        if node[0] not in visited:
+            visited.append(node[0])
             successors = problem.getSuccessors(node[0])
             for s in successors:
-                if not visited.__contains__(s[0]):
-                    q.push(s)
-                    visited.append(s[0])
-                    links[s] = node
-        else:
-            goalState = node
-            break
 
-    directions = [goalState]
-    while directions[-1] != (problem.getStartState(), None, 0):
-        directions.append(links[directions[-1]])
-
-    finalDirections = []
-    for d in directions[::-1]:
-        if d[1] != None:
-            finalDirections.append(d[1])
-    return finalDirections
-
-
+                if s[0] not in visited:  # parent[2] = total cost from the beginning to the parent node
+                    path = list(node[1])
+                    path.append(s[1])
+                    child = [s[0], path, problem.getCostOfActions(path)]
+                    q.push(child)
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -178,7 +164,7 @@ def uniformCostSearch(problem):
             successors = problem.getSuccessors(node[0])
             for s in successors:
 
-                if s[0] not in visited: # parent[2] = total cost from the beginning to the parent node
+                if s[0] not in visited:
                     path = list(node[1])
                     path.append(s[1])
                     child = [s[0], path, problem.getCostOfActions(path)]
@@ -212,7 +198,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             successors = problem.getSuccessors(node[0])
             for s in successors:
                 if s[0] not in visited:
-                      # parent[2] = total cost from the beginning to the parent node
                     path = list(node[1])
                     path.append(s[1])
                     child = [s[0], path, problem.getCostOfActions(path)]
