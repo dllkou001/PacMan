@@ -278,6 +278,7 @@ class CornersProblem(search.SearchProblem):
         """
         Stores the walls, pacman's starting position and corners.
         """
+        print("StartingGameState: ", startingGameState)
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
@@ -325,7 +326,7 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
+        print("State: ", state)
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -336,7 +337,7 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            visited = list(state[1])  # state[1] = visited_corners which is converted to a list in order to change its values
+            visited = list(state[1])
             x = state[0][0]
             y = state[0][1]
             dx, dy = Actions.directionToVector(action)
@@ -344,9 +345,9 @@ class CornersProblem(search.SearchProblem):
             hitsWall = self.walls[nextx][nexty]
             if hitsWall == False:
                 nextState = (nextx, nexty)
-                if self.corners.__contains__(nextState):  # checking if we have reached a corner
+                if self.corners.__contains__(nextState):
                     for i in range(len(self.corners)):
-                        if nextState == self.corners[i]:  # if so we set 1 at the according index at the visited_corners
+                        if nextState == self.corners[i]:
                             visited[i] = True
                             break
                 successors.append(((nextState, visited), action, 1))
@@ -437,6 +438,7 @@ class FoodSearchProblem:
         self.heuristicInfo = {} # A dictionary for the heuristic to store information
 
     def getStartState(self):
+        print("Starting state: ", self.start)
         return self.start
 
     def isGoalState(self, state):
@@ -453,6 +455,7 @@ class FoodSearchProblem:
             if not self.walls[nextx][nexty]:
                 nextFood = state[1].copy()
                 nextFood[nextx][nexty] = False
+
                 successors.append( ( ((nextx, nexty), nextFood), direction, 1) )
         return successors
 
